@@ -1,7 +1,7 @@
 {
   "name": "bd_chatserver",
   "version": "0.0.1",
-  "description": "Node.js sample app for OpenShift 3",
+  "description": "Provides a simple websockets realtime chat client server.",
   "main": "server.js",
   "dependencies": {
     "chai": "^4.1.2",

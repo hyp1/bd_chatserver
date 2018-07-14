@@ -11,10 +11,15 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
+    console.log('client connected:'+socket.handshake.headers.host);
+    socket.on('chat message', function(msg){
+        console.log('server chat message:'+msg);
     io.emit('chat message', msg);
-  });
+    });
 
+    socket.on('disconnect', function(){
+        console.log('client disconnected:'+socket.handshake.headers.host);
+    });
 });
 
 http.listen(port, function(){

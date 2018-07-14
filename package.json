@@ -1,17 +1,13 @@
 {
-  "name": "nodejs-ex",
+  "name": "bd_chatserver",
   "version": "0.0.1",
   "description": "Node.js sample app for OpenShift 3",
   "main": "server.js",
   "dependencies": {
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
-    "ejs": "^2.4.1",
     "express": "^4.13.4",
     "mocha": "^5.2.0",
-    "mongodb": "^3.1.1",
-    "morgan": "^1.7.0",
-    "object-assign": "4.1.1",
     "socket.io": "^2.1.1"
   },
   "engine": {
@@ -24,16 +20,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/openshift/nodejs-ex.git"
+    "url": "git+ssh://git@github.com/hyp1/bd_chatserver.git"
   },
-  "author": "Steve Speicher <sspeiche@gmail.com>",
+  "author": "Robert Schweng <robert.schwengh@gmail.com>",
   "license": "CC-BY-1.0",
   "bugs": {
-    "url": "http://github.com/openshift/nodejs-ex/issues"
+    "url": "http://github.com/hyp1/bd_chatserver/issues"
   },
-  "homepage": "http://github.com/openshift/nodejs-ex",
+  "homepage": "http://github.com/hyp1/bd_chatserver",
   "directories": {
     "test": "tests"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "keywords": [
+    "nodejs",
+    "backdropcms"
+  ]
 }

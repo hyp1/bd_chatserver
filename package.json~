@@ -1,0 +1,22 @@
+{
+  "name": "bd_chatserver",
+  "version": "1.0.0",
+  "description": "Backdrop CMS NodeJS Chat",
+  "main": "server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ttps://github.com/hyp1/bd_chatserver.git"
+  },
+  "keywords": [
+    "nodejs",
+    "backdropcms"
+  ],
+  "author": "Robert Schweng",
+  "license": "ISC"
+}

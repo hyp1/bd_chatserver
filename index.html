@@ -19,12 +19,14 @@
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="//cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="//cdn.bootcss.com/socket.io/2.1.0/socket.io.dev.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function () {
-        //socket = io.connect( 'http://localhost:8080' ); 
-        socket = io.connect(); 
+        socket = io.connect( );
+        //socket = io.connect( 'https://test.com:33333' );
+        //socket = io.connect( 'ws://test.com' );
+        //socket = io.connect( 'wss://test.com' );
 
         $('form').submit(function(){
           socket.emit('chat message', $('#m').val());

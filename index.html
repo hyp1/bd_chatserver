@@ -1,72 +1,88 @@
 <!doctype html>
 <html>
-  <head>
-    <title>BD CMS Chat</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+<head>
+  <title>BD CMS Chat</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      background: #34495e;
+      color: white;
+      text-align: center;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+    }
 
-  body {  background:#34495e;
-    color:white;
-    text-align:center;
-    font-family:Helvetica, Arial, sans-serif;
-    font-size:10pt;
-  }
+    label {
+      font-family: Helvetica, Arial, sans-serif;
+    }
 
-form{ 
-  border: 1px dashed gray;
-  max-width:150px;
- }
+    form {
+      font-family: Helvetica, Arial, sans-serif;
+      border: 1px dashed gray;
+      max-width: inherit;
+    }
 
+    #blogin {
+      width: 100%;
+    }
 
-#login {
+    #login {
 
-    left: 50%;
-    top: 50%;
-    position: absolute;
-    -webkit-transform: translate3d(-50%, -50%, 0);
-    -moz-transform: translate3d(-50%, -50%, 0);
-    transform: translate3d(-50%, -50%, 0);
-}
+      left: 50%;
+      top: 50%;
+      position: absolute;
+      -webkit-transform: translate3d(-50%, -50%, 0);
+      -moz-transform: translate3d(-50%, -50%, 0);
+      transform: translate3d(-50%, -50%, 0);
+    }
 
-h1{
-  font-size:3em;
-}
-a{
-  color:inherit;
-}
-.input{
-  font-size:20pt;
-  line-height:2.6em;
-  height:2.6em;
-  margin:0;
-  padding:0;
-  width:100%;
-  }
+    h1 {
+      font-size: 3em;
+    }
 
-    </style>
-  </head>
-  <body>
-    <div id="content">
-<h1>Chat Login </h1>
-    <form id="login" action="chat.html">
+    a {
+      color: inherit;
+    }
+
+    .input {
+      font-size: 20pt;
+      line-height: 2.6em;
+      height: 2.6em;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="content">
+    <h1>Chat Login </h1>
+    <div id="login">
+      <form id="login" action="chat.html">
         <label for="name">Your Name</label>
-      <input id="name" name="name" autocomplete="off" value="" />
-      <button id="blogin">Login</button>
-    </form>
+        <input id="name" name="name" autocomplete="off" value="" />
+        <button id="blogin">Login</button>
+      </form>
+    </div>
   </div>
 
-    <script>
-document.getElementById('blogin').onclick=function(){
-  if(document.getElementById('name').value.length<3){
-    alert("Please enter a name!");
-    return false;  
-  }
-  document.location.href="chat.html?name="+document.getElementById('name').value;
-  return  true;
-};
+  <script>
+    document.getElementById('blogin').onclick = function () {
+      if (document.getElementById('name').value.length < 3) {
+        alert("Please enter a name!");
+        return false;
+      }
+      document.location.href = "chat.html?name=" + document.getElementById('name').value;
+      return true;
+    };
 
-document.getElementById('name').focus();
-</script>
-  </body>
+    document.getElementById('name').focus();
+  </script>
+</body>
 </html>

@@ -3,80 +3,142 @@
   <head>
     <title>BD CMS Chat</title>
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+
+      body { 
+      
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 1.5em;
+        background: #eee; 
+        }
+      form { padding: 3px; position: fixed; bottom: 0; width: 100%; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
+      form button { width: 9%; border: none; padding: 10px; }
+      #messages {list-style-type: none; margin: 0; padding: 0; width:80% ; float:left;
+        overflow: scroll;
+      overflow-x: hidden;
+       }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
-      #messages { margin-bottom: 40px }
+      #users{ width:20%;float:right;list-style-type: none; cursor:pointer;text-align: center; background: #eee !important;}
+      #users li:nth-child(odd) { background: #416080; }
+      #users li { padding: 5px 10px; }
+
+      #messages li:nth-child(even) { color: #416080;}
+
+h1{
+  background: #34495e;
+  font-size: 2.4em;
+  text-align:center;
+  color: #eee; 
+}
+.selected {
+background: rgb(170, 218, 255) !important;
+    }
     </style>
+    <script src="//cdn.bootcss.com/socket.io/2.1.0/socket.io.dev.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.js"></script>
   </head>
   <body>
-    <ul id="messages"></ul>
+<h1 id="user">tesssst</h1>
+<ul id="messages"></ul>
+<ul id="users"></ul>
     <form action="">
       <input id="message" autocomplete="off" /><button id="bmessage">Send</button>
-      <input id="name" autocomplete="off" value="nick" /><button id="bpriv">Priv</button>
+      <input id="name" autocomplete="off" value="nick" disabled/><button id="bpriv">PrivatMsg</button>
     </form>
-     <script src="//cdn.bootcss.com/socket.io/2.1.0/socket.io.dev.js"></script>
-     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
+ <script>
 
      var socket; 
      var name=getURLParameter('name');
       $(function () {
         $('#name').val(name);
-        //socket = io.connect( 'https://test.com:33333' );
-        //socket = io.connect( 'ws://test.com' );
-        //socket = io.connect( 'wss://test.com' );      
-
+        $('#user').text(name);
 });
+
+/*
+socket = io.connect( 'https://test.com:33333' );
+socket = io.connect( 'ws://test.com' );
+socket = io.connect( 'wss://test.com' );      
+*/
+
 socket = io.connect( );
+
 socket.emit('connection name',{'name':name});
 
-  socket.on('message', function(msg){
-          console.log(socket.io.uri);
+socket.on('message', function(msg){
+          console.log(msg);
          // console.log(socket.handshake.headers.host.split(":").shift());
           $('#messages').append($('<li>').html(msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
 
         socket.on('private message', function(msg){
+          console.log(msg);
     //      console.log(socket.handshake.headers.host.split(":").shift());
-          $('#messages').append($('<li>').html(msg.txt));
+          $('#messages').append($('<li>').html(msg.time+' '+msg.tag+' '+msg.txt));
           window.scrollTo(0, document.body.scrollHeight);
-        });
+});
 
-  $('#bmessage').click(function(){
-          if($('#message').val().length=="")return false;
-         socket.emit('message', $('#message').val());
+
+socket.on('new user', function(msg){
+    //      console.log(socket.handshake.headers.host.split(":").shift());
+          $('#messages').append($('<li>').html(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+});
+
+
+
+socket.on('userlist', function(users){
+   //      console.log(socket.handshake.headers.host.split(":").shift());
+   var cnt=0;
+   $('#users').empty();
+  users.forEach(user=> {
+     $('#users').append($('<li id="'+cnt+'" onclick="setPriv(this);">').html(''+user.name+''));
+        cnt++;
+});
+
+});
+
+
+$('#bmessage').click(function(){
+  if($('#message').val().length<3)return false;
+         socket.emit('message',  $('#user').text()+':'+$('#message').val());
           $('#message').val('' );
           $('#message').focus();
           return false;
-        });
-
-$('#bname').click(function(){
-  msg={name:$('#name').val()};
-          if($('#name').val().length=="")return false;
-         socket.emit('connection name',msg );
-         return false;
-});
+ });
 
  $('#bpriv').click(function(){
-
-  var message = {to: $('#name').val(), txt:$('#message').val()};
+  if($('#message').val().length<3)return false;
+          var message = {time:0,to: $('#name').val(), txt: $('#user').text()+':'+$('#message').val()};
           console.log(message);
-          socket.emit('private message', message);   
+          socket.emit('private message', message); 
+          $('#message').val('');
+          $('#message').focus();  
           return false;       
 });
 
+
+
+function setPriv(div){
+    $('#name').val(div.innerHTML);
+    $('#users li').removeClass('selected');
+    $('li[id='+div.id+']').addClass('selected');
+    $('#message').focus();  
+};
+
+
 // RegEx: http://stackoverflow.com/a/1404100/451634
 function getURLParameter(name) {
-  var value = decodeURIComponent((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, ""])[1]);
+    var value = decodeURIComponent((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, ""])[1]);
   return (value !== 'null') ? value : false;
 }
 </script>
-  </body>
+</body>
 </html>

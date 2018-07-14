@@ -17,51 +17,50 @@ logs=[];
 
 io.sockets.on('connection', function (socket) {
     var userName;
+
   socket.on('connection name',function(user){
     console.log('ip:'+socket.handshake.address);
     userName = user.name;
     clients[user.name] = socket;
     console.log('clients['+user.name+']');
     io.sockets.emit('new user', user.name + " has joined.");
+    Userlist();
   });
 
   socket.on('message', function(msg){
-    io.sockets.emit('message', msg);
-    console.log(clients.length,'clients');
-    addUserlist();
+    io.sockets.emit('message', msg);     
   });
 
   socket.on('private message', function(msg){
     console.log(msg);
-    fromMsg = {from:userName, txt:msg.txt}
+    var d = new Date();
+    var n = d.getTime();
+    fromMsg = {from:userName, txt:msg.txt,time:n,tag:'*'}
    // no client clients[NAME]);
     if(clients[msg.to]!=undefined)clients[msg.to].emit('private message', fromMsg);
     else    console.log("no recipient");
+    console.log(fromMsg);
   });
 
   socket.on('disconnect', function(){
     console.log('disconnected '+userName);
+    io.sockets.emit('message',  userName + " has disconnected.");
     delete clients[userName];
+
   });
 
  
 }); //userName !!!
 
-function addUserlist(){
+function Userlist(){
+    var users=[]
     for (var k in clients){
         if (clients.hasOwnProperty(k)) {
-            var u
-            io.sockets.emit('userlist', k + " has joined.");
-             console.log("Key is " + k + ", value is" + clients[k].handshake.address);
+       users.push({id:1,name:k});
+//             console.log("name is " + k + ", ip is" + clients[k].handshake.address);
         }
     }
-     
-}
-
-
-function addLog(cmd,msg){
-
-     
+    io.sockets.emit('userlist', users );
 }
 
 http.listen(port, function(){

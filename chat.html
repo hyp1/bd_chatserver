@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <title>BD CMS Chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      #messages { margin-bottom: 40px }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="message" autocomplete="off" /><button id="bmessage">Send</button>
+      <input id="name" autocomplete="off" value="nick" /><button id="bpriv">Priv</button>
+    </form>
+     <script src="//cdn.bootcss.com/socket.io/2.1.0/socket.io.dev.js"></script>
+     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+
+     var socket; 
+     var name=getURLParameter('name');
+      $(function () {
+        $('#name').val(name);
+        //socket = io.connect( 'https://test.com:33333' );
+        //socket = io.connect( 'ws://test.com' );
+        //socket = io.connect( 'wss://test.com' );      
+
+});
+socket = io.connect( );
+socket.emit('connection name',{'name':name});
+
+  socket.on('message', function(msg){
+          console.log(socket.io.uri);
+         // console.log(socket.handshake.headers.host.split(":").shift());
+          $('#messages').append($('<li>').html(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        socket.on('private message', function(msg){
+    //      console.log(socket.handshake.headers.host.split(":").shift());
+          $('#messages').append($('<li>').html(msg.txt));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+
+  $('#bmessage').click(function(){
+          if($('#message').val().length=="")return false;
+         socket.emit('message', $('#message').val());
+          $('#message').val('' );
+          $('#message').focus();
+          return false;
+        });
+
+$('#bname').click(function(){
+  msg={name:$('#name').val()};
+          if($('#name').val().length=="")return false;
+         socket.emit('connection name',msg );
+         return false;
+});
+
+ $('#bpriv').click(function(){
+
+  var message = {to: $('#name').val(), txt:$('#message').val()};
+          console.log(message);
+          socket.emit('private message', message);   
+          return false;       
+});
+
+// RegEx: http://stackoverflow.com/a/1404100/451634
+function getURLParameter(name) {
+  var value = decodeURIComponent((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, ""])[1]);
+  return (value !== 'null') ? value : false;
+}
+</script>
+  </body>
+</html>

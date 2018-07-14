@@ -4,44 +4,69 @@
     <title>BD CMS Chat</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-      #messages { margin-bottom: 40px }
+
+
+  body {  background:#34495e;
+    color:white;
+    text-align:center;
+    font-family:Helvetica, Arial, sans-serif;
+    font-size:10pt;
+  }
+
+form{ 
+  border: 1px dashed gray;
+  max-width:150px;
+ }
+
+
+#login {
+
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    -moz-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+}
+
+h1{
+  font-size:3em;
+}
+a{
+  color:inherit;
+}
+.input{
+  font-size:20pt;
+  line-height:2.6em;
+  height:2.6em;
+  margin:0;
+  padding:0;
+  width:100%;
+  }
+
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="message" autocomplete="off" /><button>Send</button>
+    <div id="content">
+<h1>Chat Login </h1>
+    <form id="login" action="chat.html">
+        <label for="name">Your Name</label>
+      <input id="name" name="name" autocomplete="off" value="" />
+      <button id="blogin">Login</button>
     </form>
-     <script src="//cdn.bootcss.com/socket.io/2.1.0/socket.io.dev.js"></script>
-     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-      $(function () {
-        socket = io.connect( );
-        //socket = io.connect( 'https://test.com:33333' );
-        //socket = io.connect( 'ws://test.com' );
-        //socket = io.connect( 'wss://test.com' );
+  </div>
 
-        $('form').submit(function(){
-          if($('#message').val().length=="")return;
-          socket.emit('chat message', $('#message').val());
-          $('#message').val('');
-          $('#message').focus();
-          return false;
-        });
-        socket.on('chat message', function(msg){
-          console.log(socket.io.uri);
-         // console.log(socket.handshake.headers.host.split(":").shift());
-          $('#messages').append($('<li>').html(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
-      });
-    </script>
+    <script>
+document.getElementById('blogin').onclick=function(){
+  if(document.getElementById('name').value.length<3){
+    alert("Please enter a name!");
+    return false;  
+  }
+  document.location.href="chat.html?name="+document.getElementById('name').value;
+  return  true;
+};
+
+document.getElementById('name').focus();
+</script>
   </body>
 </html>

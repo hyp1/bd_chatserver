@@ -1,9 +1,17 @@
 # bd_chatserver
 
-Provides a simple websockets realtime chat.
-For use as a starter template in Webapps or CMS Systems. 
+Provides a simple websockets realtime chat client server.
+Use as a starter template in Webapps or CMS Systems. 
 
 ## Features
-- using socket.io@2.1.0 !
+- new using socket.io@2.1.0 
 - mocha tests
-- easy to 
+- simple plain html/javascript client  
+
+## Usage
+git clone https://github.com/hyp1/bd_chatserver
+
+ cd bd_chatserver
+ node server.js
+
+Visit [http://localhost:8080] you're ready to chat ...

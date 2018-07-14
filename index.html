@@ -23,7 +23,8 @@
     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function () {
-        socket = io.connect( 'http://localhost:8080' ); 
+        //socket = io.connect( 'http://localhost:8080' ); 
+        socket = io.connect(); 
 
         $('form').submit(function(){
           socket.emit('chat message', $('#m').val());

@@ -3,94 +3,132 @@
   <head>
     <title>BD CMS Chat</title>
     <style>
-    
-      .container {
-    width: 80%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
+   html,body{
+    padding:0;
+    margin: 0;     
+    font-family: Helvetica, Arial, sans-serif;
+   }
+
+   header {
+     display:block;
+    position: fixed;
+  top: 0;
+  width: 100%;
+  height:60px;
+
+    padding:0;
+    margin: 0;
 }
 
-header {
-    flex-shrink: 0;
-
-}
 .body{
-    flex-grow: 1;
-    overflow: auto;
-    min-height: 2em;
+  padding:0;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  overflow: none;
+  min-height: 2em;
+  width:100%;
+  height:100%;
+  margin-bottom:1em; 
 }
+
+
+#users li {
+position:relative;
+bottom:0px;
+width:100%;
+cursor: pointer;
+padding:5px;
+}
+
 footer{
     flex-shrink: 0;
     background: #34495e;
     position: fixed;
     left: 0;
     bottom: 0;
-    width:100;
+
 }
 h1{
   background: #34495e;
-  font-size: 2.4em;
-  text-align:center;
+  margin: 0;
   color: #eee; 
 }
 .selected {
-background: rgb(170, 218, 255) !important;
-    }
-#messages {
+    background: rgb(233, 182, 166)!important;
+}
+
+#messages {  
+  margin-top: 30px;
+
+  padding:0;
+  flex-direction: column;
+flex-grow: 1;
+flex-wrap: wrap
   width:80%;
   float:left;
+  list-style-type: none; 
+}
+#messages li {
+  max-width:80%;
+}
+#messages  li:nth-child(even) {
+  background: rgb(212, 237, 255) ;
+}
+#users  li:nth-child(odd) {
+    background: rgb(212, 237, 255) ;
+}
+
+
+#users {
+  border-radius: 10px;
+  margin-top: 30px;
+  flex-direction: column;
+  flex-grow: 0;
+  padding:0;
+  width:15%;
+  float:right;
+  position:fixed;
+  right: 10px;
   list-style-type: none;
 }
-#users {
-  margin:auto;
-  width:18%;
-  float:right;
-  top:0;
-  height:100%;
-  list-style-type: none;
+
+footer{
+  width:100%;
 }
   </style>
     <script src="//cdn.bootcss.com/socket.io/2.1.0/socket.io.dev.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
   </head> 
-  <div class="container">
+
       <header><h1 id="user">tesssst</h1></header>
       <div class="body">
-        <div>
+
           <ul id="messages"></ul>
-        </div>
-          <div>
+
               <ul id="users"></ul>
-          </div>
+            </div>
+           
           
-        </div>
-      <footer>
-
+        <footer>
           <form action="">
-              <input id="message" autocomplete="off" /><button id="bmessage">Send</button>
-              <input id="name" autocomplete="off" value="nick" disabled/><button id="bpriv">PrivatMsg</button>
+              <input style="width:60%;" id="message" autocomplete="off" /><button  id="bmessage">Send</button>
+              <input style="width:15%;"id="name" autocomplete="off" value="" disabled/><button  id="bpriv">Clear</button>
             </form>
+        </footer>
+  
 
-      </footer>
-  </div>
+</html>
 
-
-
-
-
-
-
-  </html>
- <script>
-
-     var socket; 
-     var name=getURLParameter('name');
-      $(function () {
-        $('#name').val(name);
-        $('#user').text(name);
-});
+<script>
+  var showprivatemsg=false;
+  var socket; 
+  var name=getURLParameter('name');
+  $(function () {
+//sertthe user from url parameter
+    $('#user').text(name);
+  });
 
 /*
 socket = io.connect( 'https://test.com:33333' );
@@ -104,9 +142,10 @@ socket = io.connect();
 socket.emit('connection name',{'name':name});
 
 socket.on('message', function(msg){
-          console.log(msg);
          // console.log(socket.handshake.headers.host.split(":").shift());
-          $('#messages').append($('<li>').html(getFormattedDate(msg.time)+' '+msg.msg));
+         var li=$('<li>').html(getFormattedDate(msg.time)+' '+msg.msg);
+
+          $('#messages').append(li);
           window.scrollTo(0, document.body.scrollHeight);
         });
 
@@ -116,7 +155,6 @@ socket.on('private message', function(msg){
           window.scrollTo(0, document.body.scrollHeight);
 });
 
-
 socket.on('new user', function(msg){
     //      console.log(socket.handshake.headers.host.split(":").shift());
           $('#messages').append($('<li>').html(msg));
@@ -124,37 +162,27 @@ socket.on('new user', function(msg){
 });
 
 
-
 socket.on('userlist', function(users){
    //      console.log(socket.handshake.headers.host.split(":").shift());
-   var cnt=0;
-   $('#users').empty();
-  users.forEach(user=> {
-     $('#users').append($('<li id="'+cnt+'" onclick="setPriv(this);">').html(''+user.name+''));
+var cnt=0;
+$('#users').empty();
+    users.forEach(user=> {
+        $('#users').append($('<li id="'+cnt+'" onclick="setPriv(this);">').html(''+user.name+''));
         cnt++;
-});
-
+    });
 });
 
 
 $('#bmessage').click(function(){
-  if($('#message').val().length<3)return false;
-         socket.emit('message',  $('#user').text()+':'+$('#message').val());
-          $('#message').val('' );
-          $('#message').focus();
-          return false;
+return sendMessage();
  });
 
- $('#bpriv').click(function(){
-  if($('#message').val().length<3)return false;
-          var message = {time:0,to: $('#name').val(), txt: $('#user').text()+':'+$('#message').val()};
-          console.log(message);
-          socket.emit('private message', message); 
-          $('#message').val('');
-          $('#message').focus();  
-          return false;       
-});
 
+ $('#bpriv').click(function(){
+   $('#name').val('');
+   $('#users li').removeClass('selected');
+   return false;
+});
 
 
 function setPriv(div){
@@ -165,10 +193,50 @@ function setPriv(div){
 };
 
 
-// RegEx: http://stackoverflow.com/a/1404100/451634
-function getURLParameter(name) {
-    var value = decodeURIComponent((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, ""])[1]);
-  return (value !== 'null') ? value : false;
+function unsetPriv(){
+    $('#name').val('');
+    $('#users li').removeClass('selected');
+    $('#message').focus();  
+};
+
+
+function sendMessage(){
+  if($('#message').val().length<3)return false;
+  if($('#name').val()==""){
+         socket.emit('message',  $('#user').text()+':'+$('#message').val());
+          $('#message').val('' );
+          $('#message').focus();
+        } else sendPrivateMessage();
+
+return false;
+};
+
+
+function sendPrivateMessage(){
+ if($('#message').val().length<3)return false;
+  var d = new Date();
+  var n = d.getTime();
+  var message = {time:n,tag:'*',to: $('#name').val(), txt: $('#user').text()+':'+$('#message').val()};
+
+  socket.emit('private message', message); 
+    
+   //show private msg localy?
+  if(showprivatemsg)
+       $('#messages').append($('<li>').html(getFormattedDate(message.time)+' '+message.tag+message.txt));
+                         
+  $('#message').val('');
+  $('#message').focus();  
+return false;       
+};
+
+
+/*
+get Parameters from URL 
+ RegEx: http://stackoverflow.com/a/1404100/451634
+*/
+ function getURLParameter(name) {
+  var value = decodeURIComponent((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, ""])[1]);
+return (value !== 'null') ? value : false;
 }
 
 function getFormattedDate(time) {

@@ -98,7 +98,8 @@ socket = io.connect( 'ws://test.com' );
 socket = io.connect( 'wss://test.com' );      
 */
 
-socket = io.connect( );
+//socket = io.connect( 'ws://kimo2007.dnshome.de:3030');
+socket = io.connect();
 
 socket.emit('connection name',{'name':name});
 
@@ -109,7 +110,7 @@ socket.on('message', function(msg){
           window.scrollTo(0, document.body.scrollHeight);
         });
 
-        socket.on('private message', function(msg){
+socket.on('private message', function(msg){
     //      console.log(socket.handshake.headers.host.split(":").shift());
           $('#messages').append($('<li>').html(getFormattedDate(msg.time)+' '+msg.tag+msg.txt));
           window.scrollTo(0, document.body.scrollHeight);

@@ -47,8 +47,11 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function(){
+    var d = new Date();
+    var n = d.getTime();
+    var message = {time:n,msg:userName+ " has disconnected."};
     console.log('disconnected '+userName);
-    io.sockets.emit('message',  userName + " has disconnected.");
+    io.sockets.emit('message',  message);
     delete clients[userName];
 
   });

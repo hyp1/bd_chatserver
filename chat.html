@@ -3,34 +3,32 @@
   <head>
     <title>BD CMS Chat</title>
     <style>
-        * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    
+      .container {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
 
+header {
+    flex-shrink: 0;
 
-      body { 
-      
-        font-family: Helvetica, Arial, sans-serif;
-        font-size: 1.5em;
-        background: #eee; 
-        }
-      form { padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; border: none; padding: 10px; }
-      #messages {list-style-type: none; margin: 0; padding: 0; width:80% ; float:left;
-        overflow: scroll;
-      overflow-x: hidden;
-       }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-      #users{ width:20%;float:right;list-style-type: none; cursor:pointer;text-align: center; background: #eee !important;}
-      #users li:nth-child(odd) { background: #416080; }
-      #users li { padding: 5px 10px; }
-
-      #messages li:nth-child(even) { color: #416080;}
-
+}
+.body{
+    flex-grow: 1;
+    overflow: auto;
+    min-height: 2em;
+}
+footer{
+    flex-shrink: 0;
+    background: #34495e;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width:100;
+}
 h1{
   background: #34495e;
   font-size: 2.4em;
@@ -40,18 +38,51 @@ h1{
 .selected {
 background: rgb(170, 218, 255) !important;
     }
-    </style>
+#messages {
+  width:80%;
+  float:left;
+  list-style-type: none;
+}
+#users {
+  margin:auto;
+  width:18%;
+  float:right;
+  top:0;
+  height:100%;
+  list-style-type: none;
+}
+  </style>
     <script src="//cdn.bootcss.com/socket.io/2.1.0/socket.io.dev.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.js"></script>
-  </head>
-  <body>
-<h1 id="user">tesssst</h1>
-<ul id="messages"></ul>
-<ul id="users"></ul>
-    <form action="">
-      <input id="message" autocomplete="off" /><button id="bmessage">Send</button>
-      <input id="name" autocomplete="off" value="nick" disabled/><button id="bpriv">PrivatMsg</button>
-    </form>
+  </head> 
+  <div class="container">
+      <header><h1 id="user">tesssst</h1></header>
+      <div class="body">
+        <div>
+          <ul id="messages"></ul>
+        </div>
+          <div>
+              <ul id="users"></ul>
+          </div>
+          
+        </div>
+      <footer>
+
+          <form action="">
+              <input id="message" autocomplete="off" /><button id="bmessage">Send</button>
+              <input id="name" autocomplete="off" value="nick" disabled/><button id="bpriv">PrivatMsg</button>
+            </form>
+
+      </footer>
+  </div>
+
+
+
+
+
+
+
+  </html>
  <script>
 
      var socket; 
@@ -74,14 +105,13 @@ socket.emit('connection name',{'name':name});
 socket.on('message', function(msg){
           console.log(msg);
          // console.log(socket.handshake.headers.host.split(":").shift());
-          $('#messages').append($('<li>').html(msg));
+          $('#messages').append($('<li>').html(getFormattedDate(msg.time)+' '+msg.msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
 
         socket.on('private message', function(msg){
-          console.log(msg);
     //      console.log(socket.handshake.headers.host.split(":").shift());
-          $('#messages').append($('<li>').html(msg.time+' '+msg.tag+' '+msg.txt));
+          $('#messages').append($('<li>').html(getFormattedDate(msg.time)+' '+msg.tag+msg.txt));
           window.scrollTo(0, document.body.scrollHeight);
 });
 
@@ -139,6 +169,27 @@ function getURLParameter(name) {
     var value = decodeURIComponent((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, ""])[1]);
   return (value !== 'null') ? value : false;
 }
+
+function getFormattedDate(time) {
+    var date = new Date(time);
+
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var min = date.getMinutes();
+    var sec = date.getSeconds();
+
+    month = (month < 10 ? "0" : "") + month;
+    day = (day < 10 ? "0" : "") + day;
+    hour = (hour < 10 ? "0" : "") + hour;
+    min = (min < 10 ? "0" : "") + min;
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var str =  day + "."+ month + "."  +date.getFullYear() + " " +  hour + ":" + min + ":" + sec;
+
+    /*alert(str);*/
+
+    return str;
+}
+
 </script>
-</body>
-</html>

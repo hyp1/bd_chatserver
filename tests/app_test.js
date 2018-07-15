@@ -49,7 +49,7 @@ describe("Chat Server",function(){
       
         var checkMessage = function(client){
           client.on('message', function(msg){
-            message.should.equal(msg);
+            message.should.equal(msg.msg);
             client.disconnect();
             messages++;
             if(messages === 3){

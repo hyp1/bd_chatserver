@@ -28,7 +28,11 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('message', function(msg){
-    io.sockets.emit('message', msg);     
+    var d = new Date();
+    var n = d.getTime();
+    var message = {time:n,msg:msg};
+    
+    io.sockets.emit('message', message);     
   });
 
   socket.on('private message', function(msg){
